@@ -1,3 +1,4 @@
+'use client';
 import React, { useState, useEffect, useRef } from "react";
 import "./ChatWindow.css";
 import { getAIMessage } from "../api/api";
@@ -12,26 +13,34 @@ function ChatWindow() {
 
   const [messages,setMessages] = useState(defaultMessage)
   const [input, setInput] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
       messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
   };
-
   useEffect(() => {
       scrollToBottom();
   }, [messages]);
 
-  const handleSend = async (input) => {
+  const handleSend = async (inp) => {
+  
     if (input.trim() !== "") {
+      setIsLoading(true);
       // Set user message
       setMessages(prevMessages => [...prevMessages, { role: "user", content: input }]);
       setInput("");
 
-      // Call API & set assistant message
-      const newMessage = await getAIMessage(input);
-      setMessages(prevMessages => [...prevMessages, newMessage]);
+      try {
+        const newMessage = await getAIMessage(input, (intermediate) => {
+          setMessages(prevMessages => [...prevMessages, intermediate]);});
+        setMessages(prevMessages => [...prevMessages, newMessage]);
+      } catch (error) {
+        console.error("Error sending message:", error);
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 

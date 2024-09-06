@@ -36,6 +36,6 @@ class judge_agent:
         else:
             state["feedback"] = evaluation
             state["next_step"] = "central_agent"
-            state["user_input"] = f"Please improve the response. Feedback: {evaluation}"
+            state["user_input"].append(f"Please improve the response. Feedback: {evaluation}")
 
         return state

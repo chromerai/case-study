@@ -3,7 +3,7 @@ from typing import TypedDict, List, Dict, Any, Annotated
 from .agents import central_agent, tool_manager, response_generation, judge_agent
 
 class State(TypedDict):
-    user_input: str
+    user_input: Annotated[List[str], "mutable"]
     conversation_history: Annotated[List[str], "mutable"]
     extracted_info: Dict[str, Any]
     tool_output: Dict[str, Any]

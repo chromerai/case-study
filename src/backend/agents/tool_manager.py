@@ -52,7 +52,7 @@ class tool_manager:
             model = extracted_info["model"]
             symptom = extracted_info["symptom"]
             if not model or not symptom:
-                state['generated_response'].append("Model and symptom are required for symptom analysis")
+                state['conversation_history'].append("Assistant: Model and symptom are required for symptom analysis")
             tool_outputs["symptom_analysis"] = self.symptom_analysis_tool(symptom, model)
 
         if '3' in selected_tools:
@@ -61,11 +61,12 @@ class tool_manager:
                 part = extracted_info["mfg_number"]
             model = extracted_info["model"]
             if not part or not model:
-                state['generated_response'].append("Part and model number are required for compatibility check")
-            tool_outputs["compatibility_check"] = self.compatibility_checker_tool(part, model)
+                state['conversation_history'].append("Assistant: Part and model number are required for compatibility check")
+            else:
+                tool_outputs["compatibility_check"] = self.compatibility_checker_tool(part, model)
 
         if '4' in selected_tools:
-            user_query = state["user_input"]
+            user_query = state["user_input"][-1]
             tool_outputs["part_recommendations"] = self.recommendation_tool.recommend(user_query)
             tool_outputs["part_recommendations"] = "Recommendations based on user query"
 

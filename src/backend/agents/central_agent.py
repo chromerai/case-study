@@ -10,11 +10,12 @@ class central_agent:
         if "conversation_history" not in state:
             state["conversation_history"] = []
 
-        user_input = state["user_input"]
+        user_input = state["user_input"][-1]
         state["conversation_history"].append(f"User: {user_input}")
 
         prompt = f"""
-        You are a helpful assistant for refrigerator and dishwasher of PartSelect: an e-commerce website.
+        You are a helpful assistant for the refrigerator and dishwasher appliances/parts of PartSelect: an e-commerce website. 
+        ** Important: Any type of questions related to other appliances should be politely declined! **
         Your task is to gather all necessary information from the user to assist them effectively.
         If the user hasn't provided enough information, ask follow-up questions. For example, you can ask: 
         "What is the model number of your appliance?" or mfg number of the part you are looking for?"

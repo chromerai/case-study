@@ -20,7 +20,7 @@ async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
     try:
         state = State(
-            user_input="",
+            user_input=[],
             conversation_history=[],
             extracted_info={},
             tool_output={},
@@ -39,13 +39,14 @@ async def websocket_endpoint(websocket: WebSocket):
                 state["next_step"] = "end"
                 break
             
-            state["user_input"] = user_input
-            state["next_step"].append("Central_agent")
+            state["user_input"].append(user_input)
+            state["next_step"].append("central_agent")
 
             # Invoke the workflow
             for step in workflow_app.stream(state):
-                if state["next_step"][-1] == "Central_agent":
-                    
+                
+                if state["next_step"][-1] == "central_agent":
+                    print(f"state: `{state}`")
                     print(json.dumps({
                         "type": "intermediate",
                         "message": state["generated_response"][-1]
@@ -55,15 +56,15 @@ async def websocket_endpoint(websocket: WebSocket):
                         "type": "intermediate",
                         "message": state["generated_response"][-1]
                     }))
-                    print("State after sending intermediate response:", state)
                     
                     user_input = await websocket.receive_text()
                     user_input = json.loads(user_input)
                     user_input = user_input["data"]
                     if user_input.lower() == "exit":
                         state["next_step"] = "end"
-                    state["user_input"] = user_input
-                    state["next_step"].append("Central_agent")
+                    state["user_input"].append(user_input)
+                    state["next_step"].append("central_agent")
+
     
             if state["next_step"][-1] == 'end':
                 print("Sending final message:", state["generated_response"][-1])

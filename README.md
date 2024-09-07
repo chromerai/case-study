@@ -1,12 +1,12 @@
 # Important:
 
 - The `backend` folder contains the following directories: 
-    - agents - The crux of the Agentic Architecture: 
-        Currently, 4 agents:
-            1. Central Agent: Main agent responsible for communication between the user and other agents. It primarily gathers information from the user inputs and extracts them for the Tool Manager. It also requests for more, if it feels the information to be insufficient.<br>
-            2. Tool Manager: Primarily, responsible for figuring out the appropriate tool to be used based on the user's query. Provides back the tool outputs to the response generation agent for appropriate response generation<br>
-            3. Response Generation: Generates responses based on the tool output and conversation history.<br>
-            4. Judge Agent: Checks the generated response by the response generation agent and evaluates and decides whether to APPROVE/DISAPPROVE sends feedback to the central agent in the latter case so that agent can again interact with the user to get essential inputs.
+    - agents - The crux of the Agentic Architecture:<br>
+        Currently, 4 agents:<br>
+            1.  Central Agent: Main agent responsible for communication between the user and other agents. It primarily gathers information from the user inputs and extracts them for the Tool Manager. It also requests for more, if it feels the information to be insufficient.<br>
+            2.  Tool Manager: Primarily, responsible for figuring out the appropriate tool to be used based on the user's query. Provides back the tool outputs to the response generation agent for appropriate response generation<br>
+            3.  Response Generation: Generates responses based on the tool output and conversation history.<br>
+            4.  Judge Agent: Checks the generated response by the response generation agent and evaluates and decides whether to APPROVE/DISAPPROVE sends feedback to the central agent in the latter case so that agent can again interact with the user to get essential inputs.
             If response is APPROVED, the workflow then comes to the end and user sees the response from the ai assistant.
             <br>
     - config - To load the environment variables

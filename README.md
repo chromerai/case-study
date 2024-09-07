@@ -14,6 +14,22 @@
     - tools - Currently there are only four types of tools, Information rertrieval, Recommendation, Compatibilty Checker(part and model), Symptom Analysis Tool  
     - utils -  currently only calls for the `OPENAI` Client, but it can be extended to include Many LLMs.
 
+
+
+## The Single most import aspect of the entire Architecture:
+
+```
+class State(TypedDict):
+    user_input: Annotated[List[str], "mutable"]
+    conversation_history: Annotated[List[str], "mutable"]
+    extracted_info: Dict[str, Any]
+    tool_output: Dict[str, Any]
+    next_step: Annotated[List[str], "mutable"]
+    tool_explanation: Annotated[List[str], "mutable"]
+    generated_response: Annotated[List[str], "mutable"]
+    feedback: str
+```
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

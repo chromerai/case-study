@@ -1,12 +1,13 @@
 from typing import List, Dict, Any, Tuple
 from ..utils.openai_client import get_openai_client
+from ..utils.utils import format_conversation, count_tokens
 
 class judge_agent:
     def __init__(self):
         self.client = get_openai_client()
     
     def __call__(self, state) -> Dict[str, Any]:
-        conversation = ' '.join(state["conversation_history"][-5:])
+        conversation = format_conversation(state["conversation_history"])
         generated_response = state["generated_response"][-1]
 
         prompt = f"""
@@ -29,6 +30,7 @@ class judge_agent:
             messages=[{"role": "system", "content": prompt}]
         )
 
+        print("judge token count: ", count_tokens([{"role": "system", "content": prompt}]))
         evaluation = response.choices[0].message.content
         if "APPROVED" in evaluation:
             state["final_response"] = generated_response

@@ -30,13 +30,14 @@ async def websocket_endpoint(websocket: WebSocket):
             feedback=""
         )
 
-        
         while True:
-            user_input = await websocket.receive_text()
-            user_input = json.loads(user_input)
+            raw_input = await websocket.receive_text()
+            print("Raw input:", raw_input)
+            user_input = json.loads(raw_input)
             user_input = user_input["data"]
+            print("User input:", user_input)
             if user_input.lower() == "exit":
-                state["next_step"] = "end"
+                state["next_step"].append("end")
                 break
             
             state["user_input"].append(user_input)
@@ -46,11 +47,6 @@ async def websocket_endpoint(websocket: WebSocket):
             for step in workflow_app.stream(state):
                 
                 if state["next_step"][-1] == "central_agent":
-                    print(f"state: `{state}`")
-                    print(json.dumps({
-                        "type": "intermediate",
-                        "message": state["generated_response"][-1]
-                    }))
                     # Send intermediate response to frontend
                     await websocket.send_text(json.dumps({
                         "type": "intermediate",
@@ -61,20 +57,21 @@ async def websocket_endpoint(websocket: WebSocket):
                     user_input = json.loads(user_input)
                     user_input = user_input["data"]
                     if user_input.lower() == "exit":
-                        state["next_step"] = "end"
+                        state["next_step"].append("end")
+                        break
                     state["user_input"].append(user_input)
                     state["next_step"].append("central_agent")
-
+            
+            if user_input.lower() == "exit":
+                break
     
-            if state["next_step"][-1] == 'end':
-                print("Sending final message:", state["generated_response"][-1])
-                # Send final response to frontend
+            if state['generated_response']:
+                    # Send final response to frontend
                 await websocket.send_text(json.dumps({
                     "type": "final",
                     "message": state["generated_response"][-1]
-                }))
+                    }))
                 
-
     except Exception as e:
         print(f"Error: {e}")
     finally:

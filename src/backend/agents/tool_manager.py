@@ -3,7 +3,7 @@ from ..tools.inforetrieving import InfoRetrievalTool
 from ..tools.symptomanalysis import SymptomAnalysisTool
 from ..tools.compatibilitycheck import CompatibilityCheckerTool
 from ..utils.openai_client import get_openai_client
-
+from ..utils.utils import format_conversation
 class tool_manager:
     def __init__(self):
         self.info_retrieval_tool = InfoRetrievalTool()
@@ -12,7 +12,7 @@ class tool_manager:
         self.client = get_openai_client()
 
     def __call__(self, state) -> Dict[str, Any]:
-        conversation = ' '.join(state["conversation_history"][-5:])
+        conversation = format_conversation(state["conversation_history"])
         extracted_info = state["extracted_info"]
         prompt = f"""
         You are the tools manager for agentic architecture. Based on the following conversation, determine which tool(s) to use:

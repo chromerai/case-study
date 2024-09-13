@@ -1,12 +1,14 @@
 from typing import Dict, Any
 from ..utils.openai_client import get_openai_client
+from ..utils.utils import format_conversation
 
 class response_generation:
     def __init__(self):
         self.client = get_openai_client()
 
     def __call__(self, state) -> Dict[str, Any]:
-        conversation = ' '.join(state["conversation_history"][-5:])
+
+        conversation = format_conversation(state["conversation_history"])
         tool_output = state["tool_output"]
 
         prompt = f"""

@@ -2,6 +2,7 @@ from typing import Dict, Any
 from ..tools.inforetrieving import InfoRetrievalTool
 from ..tools.symptomanalysis import SymptomAnalysisTool
 from ..tools.compatibilitycheck import CompatibilityCheckerTool
+from ..tools.recommedation import RecommendationTool
 from ..utils.openai_client import get_openai_client
 from ..utils.utils import format_conversation
 class tool_manager:
@@ -9,6 +10,7 @@ class tool_manager:
         self.info_retrieval_tool = InfoRetrievalTool()
         self.symptom_analysis_tool = SymptomAnalysisTool()
         self.compatibility_checker_tool = CompatibilityCheckerTool()
+        self.recommendation_tool = RecommendationTool()
         self.client = get_openai_client()
 
     def __call__(self, state) -> Dict[str, Any]:
@@ -49,19 +51,19 @@ class tool_manager:
         if '1' in selected_tools:
             tool_outputs["info_retrieval"] = self.info_retrieval_tool(extracted_info)
         if '2' in selected_tools:
-            model = extracted_info["model"]
-            symptom = extracted_info["symptom"]
+            model = extracted_info.get("model", "")
+            symptom = extracted_info.get("symptom", "")
             if not model or not symptom:
-                state['conversation_history'].append("Assistant: Model and symptom are required for symptom analysis")
-            tool_outputs["symptom_analysis"] = self.symptom_analysis_tool(symptom, model)
+                state['conversation_history'].append({"role": "assistant", "content":" Model and symptom are required for symptom analysis"})
+            tool_outputs["symptom_analysis"] = self.symptom_analysis_tool(extracted_info)
 
         if '3' in selected_tools:
-            part = extracted_info["ps_number"]
+            part = extracted_info.get("ps_number", "")
             if not part:
-                part = extracted_info["mfg_number"]
-            model = extracted_info["model"]
+                part = extracted_info.get("mfg_number", "")
+            model = extracted_info.get("model", "")
             if not part or not model:
-                state['conversation_history'].append("Assistant: Part and model number are required for compatibility check")
+                state['conversation_history'].append({"role": "assistant", "content": "Part and model number are required for compatibility check"})
             else:
                 tool_outputs["compatibility_check"] = self.compatibility_checker_tool(part, model)
 

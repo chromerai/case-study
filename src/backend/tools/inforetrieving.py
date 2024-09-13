@@ -52,7 +52,8 @@ RETURN {
         records = list(result)
         if not records:
             return {"message": "No matching part found."}
-        
+
+        print(records[0]['part_info'])
         return records[0]['part_info']
 
     def close(self):

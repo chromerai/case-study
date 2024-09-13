@@ -86,7 +86,7 @@ class Neo4jLoader:
             "   'part_embeddings',"
             "   'Part',"
             "   'embedding',"
-            "   384,"  # all-MiniLM-L6-v2 produces 384-dimensional embeddings
+            "   384,"
             "   'cosine'"
             ")"
         )
@@ -96,7 +96,7 @@ class Neo4jLoader:
             "CALL db.index.vector.createNodeIndex("
             "   'question_embedding',"
             "   'Question',"
-            "   'embedding_qs',"
+            "   'embedding_q',"
             "   384,"  # all-MiniLM-L6-v2 produces 384-dimensional embeddings
             "   'cosine'"
             ")"

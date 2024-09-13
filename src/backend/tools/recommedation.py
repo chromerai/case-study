@@ -4,9 +4,9 @@ from neo4j import GraphDatabase
 from ..config import config
 
 class RecommendationTool:
-    def __init__(self, uri: str, user: str, password: str, model_name: str = 'all-MiniLM-L6-v2'):
-        self.driver = GraphDatabase.driver(config.NEO44J_URI, auth=(config.NEO4J_USER, config.NEO4J_PASSWORD))
-        self.model = SentenceTransformer(model_name)
+    def __init__(self, embedder: str = 'all-MiniLM-L6-v2'):
+        self.driver = GraphDatabase.driver(config.NEO4J_URI, auth=(config.NEO4J_USER, config.NEO4J_PASSWORD))
+        self.model = SentenceTransformer(embedder)
 
     def recommend(self, query: str, top_k: int = 5) -> List[Dict]:
         # Convert query to embedding
